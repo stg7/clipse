@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import sys
+import os
 import glob
 import multiprocessing
 
@@ -30,11 +31,11 @@ class CLIP:
 
     def get_image_features(self, image_path):
         image = self.preprocess(Image.open(image_path)).unsqueeze(0)
-        with torch.no_grad(), torch.cuda.amp.autocast():
-            image_features = self.model.encode_image(image)
-            image_features /= image_features.norm(dim=-1, keepdim=True)
+        #with torch.no_grad(), torch.cuda.amp.autocast():
+        image_features = self.model.encode_image(image)
+        image_features /= image_features.norm(dim=-1, keepdim=True)
 
-        return image_features
+        return image_features.tolist()
 
 
 def main(_):
@@ -49,10 +50,16 @@ def main(_):
     a = vars(parser.parse_args())
     pool = multiprocessing.Pool(a["cpu_count"])
 
-    print("Hello from my-clipsearch!")
-    clip = CLIP()
-    print(res := clip.get_image_features("./imgs/-0_ww2ACIw8.jpg"))
+    os.makedirs(a["index_folder"], exist_ok=True)
 
+    print(f"""calculate embeddings for folder {a["image_folder"]} """)
+    clip = CLIP()
+    images = list(glob.glob(os.path.join(a["image_folder"], "*")))
+    print(f"""{len(images)} images to handle """)
+    res = list(map(clip.get_image_features, images))
+    #print(res)
+    #print(res[0])
+    #print(len(res))
     breakpoint()
 
 
