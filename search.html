@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLIPSE (clip based image search engine)</title>
+  <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+  <style>
+    main > div {
+        display: inline;
+        margin-left: 1em;
+    }
+    button, input {
+        padding: 0.25rem 0.5rem !important;
+        display: inline !important;
+        margin-right: 1em;
+    }
+    input {
+      width: 50% !important;
+    }
+
+  </style>
+</head>
+<body>
+    <header>
+        <h1>CLIPSE (clip based image search engine)</h1>
+        <input type="text" name="q" placeholder="Type your query here..." required>
+        <button type="button" onclick="search()">Search</button>
+
+    </header>
+    <main class="results-container" id="results">
+
+
+    </main>
+    <footer>
+        <hr>
+        <p>
+            <small>stg7 2025</small>
+        </p>
+    </footer>
+
+
+  <script>
+
+    const resultsContainer = document.querySelector('.results-container');
+    function search() {
+        query = document.getElementsByName("q")[0].value;
+        console.log(query);
+        fetch(`/search?query=${encodeURIComponent(query)}`)
+          .then(response => response.json())
+          .then(images => {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+            images.forEach(img => {
+              const imgElem = document.createElement('img');
+              imgElem.src = img;
+              resultsDiv.appendChild(imgElem);
+            });
+          });
+
+    }
+
+  </script>
+</body>
+</html>
