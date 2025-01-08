@@ -34,13 +34,13 @@ def index():
 
 
 @app.route('/imgs/<path:path>')
-def send_report(path):
+def imgs(path):
     # Using request args for path will expose you to directory traversal attacks
     return send_from_directory('imgs', path)
 
 
-@app.route('full/imgs/<path:path>')
-def send_report(path):
+@app.route('/full/imgs/<path:path>')
+def full_res_imgs(path):
     return send_from_directory('full/imgs', path)
 
 
