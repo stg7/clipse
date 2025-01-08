@@ -1,15 +1,34 @@
 #!/usr/bin/env python3
 
-from flask import Flask, request, jsonify
+import pandas as pd
+from flask import Flask, request, jsonify, render_template, send_from_directory
 
-app = Flask(__name__)
+from query import query_index
+
+app = Flask(__name__, template_folder="templates")
+
+do_query = query_index("./index/imgs.json")
 
 @app.route('/search', methods=['GET'])
 def search():
     query = request.args.get('query')  # Get the query parameter
     # Mocked response: Replace with your logic to fetch image URLs
-    images = [f"https://example.com/image_{i}.jpg" for i in range(10)]
+    df = do_query(query)
+    images = df.head(10)["image"].values.tolist()
+    print(images)
     return jsonify(images)
+
+
+@app.route('/')
+def index():
+    return render_template('search.html')
+
+
+@app.route('/imgs/<path:path>')
+def send_report(path):
+    # Using request args for path will expose you to directory traversal attacks
+    return send_from_directory('imgs', path)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

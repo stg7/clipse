@@ -6,10 +6,7 @@
   <title>CLIPSE (clip based image search engine)</title>
   <link rel="stylesheet" href="https://unpkg.com/mvp.css">
   <style>
-    main > div {
-        display: inline;
-        margin-left: 1em;
-    }
+
     button, input {
         padding: 0.25rem 0.5rem !important;
         display: inline !important;
@@ -18,13 +15,21 @@
     input {
       width: 50% !important;
     }
+    .square-crop {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 8px; /* Optional */
+      padding-right: 10px;
+    }
 
   </style>
 </head>
 <body>
     <header>
         <h1>CLIPSE (clip based image search engine)</h1>
-        <input type="text" name="q" placeholder="Type your query here..." required>
+        <input type="text" name="q" placeholder="Type your query here..." required onkeydown="handleKeyDown(event)">
         <button type="button" onclick="search()">Search</button>
 
     </header>
@@ -42,7 +47,12 @@
 
   <script>
 
-    const resultsContainer = document.querySelector('.results-container');
+    function handleKeyDown(event) {
+      if (event.key === "Enter") {  // Check if the Enter key is pressed
+        search();  // Trigger the search function
+      }
+    }
+
     function search() {
         query = document.getElementsByName("q")[0].value;
         console.log(query);
@@ -54,6 +64,7 @@
             images.forEach(img => {
               const imgElem = document.createElement('img');
               imgElem.src = img;
+              imgElem.classList.add("square-crop");
               resultsDiv.appendChild(imgElem);
             });
           });
