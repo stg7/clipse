@@ -30,8 +30,8 @@ def main(_):
     images = list(glob.glob(os.path.join(a["image_folder"], "*")))
     print(f"""{len(images)} images to handle """)
     res = list(map(clip.get_image_features, tqdm(images)))
-
-    with open(os.path.join(a["index_folder"], os.path.basename(a["image_folder"]) + ".json"), "w") as xfp:
+    imgfoldername = os.path.basename(os.path.normpath(a["image_folder"]))
+    with open(os.path.join(a["index_folder"], imgfoldername + ".json"), "w") as xfp:
         json.dump(res, xfp)
     print("done")
 

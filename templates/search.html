@@ -16,8 +16,8 @@
       width: 50% !important;
     }
     .square-crop {
-      width: 100px;
-      height: 100px;
+      width: 20vw;
+      height: 20vw;
       object-fit: cover;
       object-position: center;
       border-radius: 8px; /* Optional */
@@ -33,9 +33,13 @@
         <button type="button" onclick="search()">Search</button>
 
     </header>
-    <main class="results-container" id="results">
+    <main class="results-container" >
+      <article id="results">
 
+      </article>
 
+      <article id="meta">
+      </article>
     </main>
     <footer>
         <hr>
@@ -58,14 +62,27 @@
         console.log(query);
         fetch(`/search?query=${encodeURIComponent(query)}`)
           .then(response => response.json())
-          .then(images => {
+          .then(result => {
+            images = result["images"];
+            meta = result["meta"];
+            const metaDiv = document.getElementById('meta');
+            metaDiv.innerHTML = meta["processing_time"] + "s";
+
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = '';
             images.forEach(img => {
+              const linkElem = document.createElement('a');
+              linkElem.href = "full/" + img; // Set the image URL as the href
+              linkElem.target = "_blank"; // Open the link in a new tab
+
               const imgElem = document.createElement('img');
               imgElem.src = img;
               imgElem.classList.add("square-crop");
-              resultsDiv.appendChild(imgElem);
+
+              // Append the image to the link
+              linkElem.appendChild(imgElem);
+
+              resultsDiv.appendChild(linkElem);
             });
           });
 
