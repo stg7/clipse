@@ -21,15 +21,35 @@ def transform_json_index(index_json):
     for x in tqdm(index_json):
         images.append(x["image"])
         embeddings.append(np.array(x["features"]))
-    return images, np.array(embeddings).reshape((len(images), -1))
+    return np.array(images), np.array(embeddings).reshape((len(images), -1))
+
+def load_index(index_file):
+    cached_index = index_file + ".npz"
+    index_size = os.stat(index_file).st_size
+    if os.path.isfile(cached_index):
+        npzfile = np.load(cached_index)
+        images = npzfile["images"]
+        embeddings = npzfile["embeddings"]
+        # check if file size has been changed, if not all is fine
+        if npzfile["index_size"] == index_size:
+            return images, embeddings
+
+    with open(index_file) as xfp:
+        index = json.load(xfp)
+    images, embeddings = transform_json_index(index)
+    np.savez(
+        index_file + ".npz",
+        images=images,
+        embeddings=embeddings,
+        index_size=index_size
+    )
+
+    return images, embeddings
 
 
 def query_index(index_file):
     print("load index :smiley:")
-    with open(index_file) as xfp:
-        index = json.load(xfp)
-    images, embeddings = transform_json_index(index)
-
+    images, embeddings = load_index(index_file)
     clip = CLIP()
     def do_query(query_text):
         if query_text == "" or not query_text:

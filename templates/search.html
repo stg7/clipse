@@ -10,30 +10,40 @@
     button, input {
         padding: 0.25rem 0.5rem !important;
         display: inline !important;
-        margin-right: 1em;
+        margin-right: 0.5em;
     }
     input {
       width: 50% !important;
     }
     .square-crop {
-      width: 18vw;
-      height: 18vw;
+      width: 19vw;
+      height: 19vw;
       object-fit: cover;
       object-position: center;
       border-radius: 8px; /* Optional */
       padding-right: 10px;
     }
+    header {
+        padding: 0.5rem 0.5rem !important;
+    }
+    footer, main {
+        padding: 1rem 0.5rem !important;
+    }
+
 
   </style>
 </head>
 <body>
-    <header>
-        <h1>CLIPSE (clip based image search engine)</h1>
-        <input type="text" name="q" placeholder="Type your query here..." required onkeydown="handleKeyDown(event)">
-        <button type="button" onclick="search()">Search</button>
 
-    </header>
-    <main class="results-container" >
+    <main >
+      <article>
+        <center>
+        <h1>CLIPSE</h1>
+        <p><small>(clip based image search engine)</small></p>
+        <input type="text" name="q" placeholder="Type your query here..." required onkeydown="handleKeyDown(event)">
+        <button type="button" onclick="search()">&#x1F50E;&#xFE0E;</button>
+        </center>
+      </article>
       <article id="results">
 
       </article>
@@ -44,9 +54,9 @@
     </main>
     <footer>
         <hr>
-        <p>
+        <center>
             <small>stg7 2025</small>
-        </p>
+        </center>
     </footer>
 
 
