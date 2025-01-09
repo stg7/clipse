@@ -8,7 +8,7 @@ from query import query_index
 
 app = Flask(__name__, template_folder="templates")
 
-do_query = query_index("./index/imgs.json")
+do_query = query_index("./index/photos.json")
 
 @app.route('/search', methods=['GET'])
 def search():
@@ -33,15 +33,15 @@ def index():
     return render_template('search.html')
 
 
-@app.route('/imgs/<path:path>')
+@app.route('/photos/<path:path>')
 def imgs(path):
     # Using request args for path will expose you to directory traversal attacks
-    return send_from_directory('imgs', path)
+    return send_from_directory('photos', path)
 
 
-@app.route('/full/imgs/<path:path>')
+@app.route('/full/photos/<path:path>')
 def full_res_imgs(path):
-    return send_from_directory('full/imgs', path)
+    return send_from_directory('full/photos', path)
 
 
 if __name__ == '__main__':
