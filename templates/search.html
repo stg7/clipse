@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CLIPSE (clip-based image search engine)</title>
   <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tektur:wght@400..900&display=swap" rel="stylesheet">
   <style>
-
     button, input {
         padding: 0.25rem 0.5rem !important;
         display: inline !important;
-        margin-right: 1em;
+        margin-right: 0.5em;
     }
     input {
         width: 50% !important;
@@ -45,17 +47,35 @@
     .pagination li:hover {
         text-decoration: underline;
     }
+    header {
+        padding: 0.5rem 0.5rem !important;
+    }
+    footer, main {
+        padding: 1rem 0.5rem !important;
+    }
+    .title {
+        font-family: "Tektur", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        font-variation-settings: "wdth" 100;
+        font-size: 2.5em;
+    }
 
   </style>
 </head>
 <body>
     <header>
-        <h1>CLIPSE (clip-based image search engine)</h1>
+      <article>
+        <center>
+        <h1 class="title">CLIPSE</h1>
+        <p><small>(clip based image search engine)</small></p>
         <input type="text" name="q" placeholder="Type your query here..." required onkeydown="handleKeyDown(event)">
-        <button type="button" onclick="search()">Search</button>
-
+        <button type="button" onclick="search()">&#x1F50E;&#xFE0E;</button>
+        </center>
+      </article>
     </header>
-    <main class="results-container" >
+    <main >
       <article id="results">
 
       </article>
@@ -69,9 +89,9 @@
     </main>
     <footer>
         <hr>
-        <p>
+        <center>
             <small>stg7 2025</small>
-        </p>
+        </center>
     </footer>
 
 
@@ -83,6 +103,7 @@
         }
     }
 
+    // searching
     function search(page=0) {
         query = document.getElementsByName("q")[0].value;
         console.log(query);
@@ -117,55 +138,55 @@
     }
 
 
-// Function to generate pagination
-function generatePagination(maxPages, currentPage) {
-    const paginationContainer = document.getElementById('pagination-container');
-    paginationContainer.innerHTML = '';
-    currentPage = parseInt(currentPage + "");
-    maxPages = parseInt(maxPages + "");
-    console.log(maxPages);
-    console.log(currentPage);
+    // Function to generate pagination
+    function generatePagination(maxPages, currentPage) {
+        const paginationContainer = document.getElementById('pagination-container');
+        paginationContainer.innerHTML = '';
+        currentPage = parseInt(currentPage + "");
+        maxPages = parseInt(maxPages + "");
+        console.log(maxPages);
+        console.log(currentPage);
 
-    const ul = document.createElement('ul');
-    ul.className = 'pagination';
+        const ul = document.createElement('ul');
+        ul.className = 'pagination';
 
-    create_page_button = (page, label) => {
-        const li = document.createElement('li');
-        li.textContent = label;
-        li.classList.add('page')
+        create_page_button = (page, label) => {
+            const li = document.createElement('li');
+            li.textContent = label;
+            li.classList.add('page')
 
-        li.addEventListener('click', () => {
-            search(page);
-        });
-        return li;
-    };
+            li.addEventListener('click', () => {
+                search(page);
+            });
+            return li;
+        };
 
-    if (currentPage > 0) { // prev button
-        ul.appendChild(create_page_button(currentPage -1, "<"));
-    }
-    const min_page = Math.min(currentPage, Math.max(currentPage - 3, 0));
-    const max_page = Math.max(currentPage, Math.max(currentPage + 3, 0));
-    console.log("min", min_page);
-    console.log("max", max_page);
-
-
-    for (let i = min_page; i <= max_page; i++) {
-        console.log("here");
-        li = create_page_button(i, i);
-        if (i == currentPage) {
-            console.log("active");
-            li.classList.add('active');
+        if (currentPage > 0) { // prev button
+            ul.appendChild(create_page_button(currentPage -1, "<"));
         }
-        ul.appendChild(li);
-    }
+        const min_page = Math.min(currentPage, Math.max(currentPage - 3, 0));
+        const max_page = Math.max(currentPage, Math.max(currentPage + 3, 0));
+        console.log("min", min_page);
+        console.log("max", max_page);
 
-    if (currentPage < maxPages) { // next button
-        ul.appendChild(create_page_button(currentPage + 1, ">"));
-    }
 
-    paginationContainer.appendChild(ul);
-    window.scrollTo(0, 0);
-}
+        for (let i = min_page; i <= max_page; i++) {
+            console.log("here");
+            li = create_page_button(i, i);
+            if (i == currentPage) {
+                console.log("active");
+                li.classList.add('active');
+            }
+            ul.appendChild(li);
+        }
+
+        if (currentPage < maxPages) { // next button
+            ul.appendChild(create_page_button(currentPage + 1, ">"));
+        }
+
+        paginationContainer.appendChild(ul);
+        window.scrollTo(0, 0);
+    }
 
 
   </script>

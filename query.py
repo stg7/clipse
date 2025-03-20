@@ -14,30 +14,43 @@ from rich import print
 from clip_utils import CLIP
 
 
+def transform_json_index(index_json):
+    images = []
+    embeddings = []
+    for x in tqdm(index_json):
+        images.append(x["image"])
+        embeddings.append(np.array(x["features"]))
+    return np.array(images), np.array(embeddings).reshape((len(images), -1))
+
+
 def load_index(index_file):
-    print("load index :smiley:")
-    if os.path.isfile(index_file + ".npz"):  # load npz
-        data = np.load(index_file + ".npz")
-        return data["images"], data["embeddings"]
+    cached_index = index_file + ".npz"
+    index_size = os.stat(index_file).st_size
+    if os.path.isfile(cached_index):
+        npzfile = np.load(cached_index)
+        images = npzfile["images"]
+        embeddings = npzfile["embeddings"]
+        # check if file size has been changed, if not all is fine
+        if npzfile["index_size"] == index_size:
+            return images, embeddings
 
     with open(index_file) as xfp:
         index = json.load(xfp)
-    images = []
-    embeddings = []
-    for x in tqdm(index):
-        images.append(x["image"])
-        embeddings.append(np.array(x["features"]))
-
-    embeddings = np.array(embeddings).reshape((len(images), -1))
-    np.savez_compressed(index_file + ".npz", images=np.array(images), embeddings=embeddings)
+    images, embeddings = transform_json_index(index)
+    np.savez(
+        index_file + ".npz",
+        images=images,
+        embeddings=embeddings,
+        index_size=index_size
+    )
 
     return images, embeddings
 
 
 def query_index(index_file):
 
+    print("load index :smiley:")
     images, embeddings = load_index(index_file)
-
     clip = CLIP()
     def do_query(query_text):
         if query_text == "" or not query_text:
@@ -51,7 +64,7 @@ def query_index(index_file):
 
 def main(_):
     # argument parsing
-    parser = argparse.ArgumentParser(description='query clip index',
+    parser = argparse.ArgumentParser(description='query clipse index',
                                      epilog="stg7 2025",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--query", type=str, default=None, help="search query")
