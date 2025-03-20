@@ -14,21 +14,29 @@ from rich import print
 from clip_utils import CLIP
 
 
-def transform_json_index(index_json):
+def load_index(index_file):
+    print("load index :smiley:")
+    if os.path.isfile(index_file + ".npz"):  # load npz
+        data = np.load(index_file + ".npz")
+        return data["images"], data["embeddings"]
+
+    with open(index_file) as xfp:
+        index = json.load(xfp)
     images = []
     embeddings = []
-    # TODO: maybe use pandas
-    for x in tqdm(index_json):
+    for x in tqdm(index):
         images.append(x["image"])
         embeddings.append(np.array(x["features"]))
-    return images, np.array(embeddings).reshape((len(images), -1))
+
+    embeddings = np.array(embeddings).reshape((len(images), -1))
+    np.savez_compressed(index_file + ".npz", images=np.array(images), embeddings=embeddings)
+
+    return images, embeddings
 
 
 def query_index(index_file):
-    print("load index :smiley:")
-    with open(index_file) as xfp:
-        index = json.load(xfp)
-    images, embeddings = transform_json_index(index)
+
+    images, embeddings = load_index(index_file)
 
     clip = CLIP()
     def do_query(query_text):
@@ -55,7 +63,6 @@ def main(_):
 
     if a["query"]:
         df = do_query(a["query"])
-
         print(f"""top 10 matching images to {a["query"]}""")
         print(df.head(10))
         print("done")

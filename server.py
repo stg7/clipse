@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import time
+import math
 
 import pandas as pd
 from flask import Flask, request, jsonify, render_template, send_from_directory
@@ -12,17 +13,25 @@ do_query = query_index("./index/photos.json")
 
 @app.route('/search', methods=['GET'])
 def search():
+    images_per_page = 9
+
     query = request.args.get('query')  # Get the query parameter
-    # Mocked response: Replace with your logic to fetch image URLs
+    page = int(request.args.get('page', 0))
     start_time = time.time()
-    df = do_query(query)
-    images = df.head(10)["image"].values.tolist()
+    df = do_query(query)  # all results
+
+    df_sel = df.head(images_per_page * (page +1)).tail(images_per_page)
+    images = df_sel["image"].values.tolist()
+    similarities = df_sel["similarity"].values.tolist()
     end_time = time.time()
     print(images)
     result = {
         "images": images,
+        "similarities": similarities,
         "meta": {
-            "processing_time": (end_time - start_time)
+            "processing_time": (end_time - start_time),
+            "max_pages": math.ceil(len(df) / images_per_page),
+            "current_page": page
         }
     }
     return jsonify(result)

@@ -13,15 +13,37 @@
         margin-right: 1em;
     }
     input {
-      width: 50% !important;
+        width: 50% !important;
     }
     .square-crop {
-      width: 18vw;
-      height: 18vw;
-      object-fit: cover;
-      object-position: center;
-      border-radius: 8px; /* Optional */
-      padding-right: 10px;
+        width: 18vw;
+        height: 18vw;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 8px; /* Optional */
+        padding-right: 10px;
+    }
+    .pagination {
+        display:flex;
+        list-style:none;
+        justify-content: center;
+    }
+
+    .pagination .page {
+        margin-right: 0.5em;
+        margin-top: 0em;
+        margin-bottom: 0em;
+        margin-left: 0em;
+        padding: 0 0 !important;
+        color: #0000ff;
+    }
+    .pagination .active {
+        color: #aaaaff;
+        text-decoration: overline;
+    }
+
+    .pagination li:hover {
+        text-decoration: underline;
     }
 
   </style>
@@ -29,12 +51,15 @@
 <body>
     <header>
         <h1>CLIPSE (clip based image search engine)</h1>
-        <input type="text" name="q" placeholder="Type your query here..." required onkeydown="handleKeyDown(event)">
+        <input type="text" name="q" placeholder="Type your query here..." value="a cat" required onkeydown="handleKeyDown(event)">
         <button type="button" onclick="search()">Search</button>
 
     </header>
     <main class="results-container" >
       <article id="results">
+
+      </article>
+      <article id="pagination-container">
 
       </article>
 
@@ -53,41 +78,95 @@
   <script>
 
     function handleKeyDown(event) {
-      if (event.key === "Enter") {  // Check if the Enter key is pressed
-        search();  // Trigger the search function
-      }
+        if (event.key === "Enter") {  // Check if the Enter key is pressed
+            search();  // Trigger the search function
+        }
     }
 
-    function search() {
+    function search(page=0) {
         query = document.getElementsByName("q")[0].value;
         console.log(query);
-        fetch(`/search?query=${encodeURIComponent(query)}`)
-          .then(response => response.json())
-          .then(result => {
-            images = result["images"];
-            meta = result["meta"];
-            const metaDiv = document.getElementById('meta');
-            metaDiv.innerHTML = meta["processing_time"] + "s";
+        fetch(`/search?query=${encodeURIComponent(query)}&page=${encodeURIComponent(page)}`)
+            .then(response => response.json())
+            .then(result => {
+                images = result["images"];
+                similarities = result["images"];
+                meta = result["meta"];
+                const metaDiv = document.getElementById('meta');
+                metaDiv.innerHTML = meta["processing_time"] + "s";
 
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '';
-            images.forEach(img => {
-              const linkElem = document.createElement('a');
-              linkElem.href = "full/" + img; // Set the image URL as the href
-              linkElem.target = "_blank"; // Open the link in a new tab
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = '';
+                images.forEach(img => {
+                    const linkElem = document.createElement('a');
+                    linkElem.href = "full/" + img; // Set the image URL as the href
+                    linkElem.target = "_blank"; // Open the link in a new tab
 
-              const imgElem = document.createElement('img');
-              imgElem.src = img;
-              imgElem.classList.add("square-crop");
+                    const imgElem = document.createElement('img');
+                    imgElem.src = img;
+                    imgElem.classList.add("square-crop");
 
-              // Append the image to the link
-              linkElem.appendChild(imgElem);
+                    // Append the image to the link
+                    linkElem.appendChild(imgElem);
 
-              resultsDiv.appendChild(linkElem);
+                    resultsDiv.appendChild(linkElem);
+                });
+                generatePagination(meta["max_pages"], meta["current_page"]);
             });
-          });
 
     }
+
+
+// Function to generate pagination
+function generatePagination(maxPages, currentPage) {
+    const paginationContainer = document.getElementById('pagination-container');
+    paginationContainer.innerHTML = '';
+    currentPage = parseInt(currentPage + "");
+    maxPages = parseInt(maxPages + "");
+    console.log(maxPages);
+    console.log(currentPage);
+
+    const ul = document.createElement('ul');
+    ul.className = 'pagination';
+
+    create_page_button = (page, label) => {
+        const li = document.createElement('li');
+        li.textContent = label;
+        li.classList.add('page')
+
+        li.addEventListener('click', () => {
+            search(page);
+        });
+        return li;
+    };
+
+    if (currentPage > 0) { // prev button
+        ul.appendChild(create_page_button(currentPage -1, "<"));
+    }
+    const min_page = Math.min(currentPage, Math.max(currentPage - 3, 0));
+    const max_page = Math.max(currentPage, Math.max(currentPage + 3, 0));
+    console.log("min", min_page);
+    console.log("max", max_page);
+
+
+    for (let i = min_page; i <= max_page; i++) {
+        console.log("here");
+        li = create_page_button(i, i);
+        if (i == currentPage) {
+            console.log("active");
+            li.classList.add('active');
+        }
+        ul.appendChild(li);
+    }
+
+    if (currentPage < maxPages) { // next button
+        ul.appendChild(create_page_button(currentPage + 1, ">"));
+    }
+
+    paginationContainer.appendChild(ul);
+    window.scrollTo(0, 0);
+}
+
 
   </script>
 </body>
