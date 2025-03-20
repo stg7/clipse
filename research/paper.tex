@@ -1,0 +1,99 @@
+\documentclass{article}
+
+\usepackage{arxiv}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{color}
+\usepackage{hyperref}
+\hypersetup{colorlinks,linkcolor=blue,urlcolor=cyan}
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{cleveref}       % smart cross-referencing
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{doi}
+\graphicspath{{./imgs/}}
+
+\title{CLIPSE -- a minimalistic CLIP-based image search engine for research}
+
+% Here you can change the date presented in the paper title
+%\date{September 9, 1985}
+% Or remove it
+%\date{}
+
+\newif\ifuniqueAffiliation
+% Comment to use multiple affiliations variant of author block
+\uniqueAffiliationtrue
+
+
+\author{ Steve Göring\hspace{1mm}\href{https://orcid.org/0000-0001-6810-6969}{\includegraphics[scale=0.06]{orcid.pdf}}\\
+    Audiovisual Technology Group\\
+    Technische Universität Ilmenau\\
+    Germany \\
+    \texttt{steve.goering@tu-ilmenau.de} \\
+}
+
+
+% Uncomment to override  the `A preprint' in the header
+%\renewcommand{\headeright}{Technical Report}
+%\renewcommand{\undertitle}{Technical Report}
+\renewcommand{\shorttitle}{\textit{arXiv} Template}
+
+
+\hypersetup{
+pdftitle={CLIPSE -- a minimalistic CLIP-based image search engine for research},
+pdfsubject={image search engine},
+pdfauthor={Steve Göring},
+pdfkeywords={image search},
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+
+% keywords can be removed
+\keywords{image search \and CLIP}
+
+
+\section{Introduction}
+Considering the increase of uploaded images per year, finding images to matching text descriptions is an ongoing challenge.
+Various image search engines, e.g., Google search, Bing search, or open source engines (XY, XYZ), are available.
+However, especially for research, small search engines considering own datasets are hard to find.
+For this reason, a minimalistic search engine, called CLIPSE (CLIP-based image Search Engine), was developed.
+CLIPSE is published as Open-Source software\footnote{\url{clipse}}.
+The design follows a simplification approach, therefor everything is kept minimalistic.
+This enables to perform a simple text based image search for a given data-set.
+
+
+
+\section{Architecture Overview}
+CLIPSE
+
+uv
+
+CLIP
+flask
+mvp
+
+
+* build\_index.py: create an index based on a folder with images (recommended to downscale the images, e.g. to 480x480)
+* query.py: command line interface to perform queries to an created index
+* server.py: web interface
+
+\section{Example}
+
+
+\bibliographystyle{unsrtnat}
+\bibliography{refs}
+
+
+
+\end{document}

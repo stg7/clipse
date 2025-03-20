@@ -4,24 +4,22 @@ import sys
 import os
 import glob
 import json
-#import multiprocessing
 
 from tqdm import tqdm
+from rich import print
 
 from clip_utils import CLIP
 
 
 def main(_):
     # argument parsing
-    parser = argparse.ArgumentParser(description='create clip index',
+    parser = argparse.ArgumentParser(description='create clipse index',
                                      epilog="stg7 2025",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("image_folder", type=str, help="images to be processed")
-    parser.add_argument("--index_folder", type=str, default="index", help="folder for storing the clip features/index")
-    #parser.add_argument('--cpu_count', type=int, default=multiprocessing.cpu_count(), help='thread/cpu count')
+    parser.add_argument("--index_folder", type=str, default="index", help="folder for storing the clipse index")
 
     a = vars(parser.parse_args())
-    #pool = multiprocessing.Pool(a["cpu_count"])
 
     os.makedirs(a["index_folder"], exist_ok=True)
 
@@ -33,7 +31,7 @@ def main(_):
     imgfoldername = os.path.basename(os.path.normpath(a["image_folder"]))
     with open(os.path.join(a["index_folder"], imgfoldername + ".json"), "w") as xfp:
         json.dump(res, xfp)
-    print("done")
+    print("done :cat:")
 
 
 if __name__ == "__main__":
