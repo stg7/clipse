@@ -9,7 +9,7 @@ from tqdm import tqdm
 from rich import print
 
 from clip_utils import CLIP
-
+from query import load_index
 
 def main(_):
     # argument parsing
@@ -29,8 +29,13 @@ def main(_):
     print(f"""{len(images)} images to handle """)
     res = list(map(clip.get_image_features, tqdm(images)))
     imgfoldername = os.path.basename(os.path.normpath(a["image_folder"]))
-    with open(os.path.join(a["index_folder"], imgfoldername + ".json"), "w") as xfp:
+    index_file = os.path.join(a["index_folder"], imgfoldername + ".json")
+    with open(index_file, "w") as xfp:
         json.dump(res, xfp)
+
+    print("check to read the index")
+    index = load_index(index_file)
+
     print("done :cat:")
 
 

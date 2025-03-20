@@ -4,7 +4,6 @@ import sys
 import os
 import glob
 import json
-#import multiprocessing
 
 from tqdm import tqdm
 import numpy as np
@@ -70,6 +69,7 @@ def main(_):
     parser.add_argument("--query", type=str, default=None, help="search query")
     parser.add_argument("--index_file", type=str, default="index/photos.json", help="index file to load")
     parser.add_argument("--interactive","-i", action="store_true", help="interactive interface")
+    parser.add_argument('--num_results', type=int, default=10, help='number of results to be shown')
 
     a = vars(parser.parse_args())
     do_query = query_index(a["index_file"])
@@ -77,19 +77,19 @@ def main(_):
     if a["query"]:
         df = do_query(a["query"])
         print(f"""top 10 matching images to {a["query"]}""")
-        print(df.head(10))
+        print(df.head(a["num_results"]))
+        print(df.head(a["num_results"]).to_json(index=False))
         print("done")
-        print(df.tail(10))
 
     if a["interactive"]:
-        print("[bold blue]welcome[/bold blue] :smiley: to the interactive search (empty query to exit)")
+        print("[bold blue]welcome[/bold blue] :smiley: to the interactive CLIPSE search (empty query to exit)")
         query = "."
         while query != "":
             print("[bold red]prompt>[/bold red] ", end="")
             query = input()
             if query != "":
                 df = do_query(query)
-                print(df.head(10))
+                print(df.head(a["num_results"]))
                 print(":thumbsup:")
 
 
