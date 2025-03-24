@@ -67,7 +67,10 @@ pdfkeywords={image search},
 \section{Introduction}
 Considering the increase of uploaded images per year, e.g., to photo sharing platforms (Flickr, Instagram, \ldots), or using AI text-to-image generators (DALL-E, Midjourney, \ldots), finding images to match a given text description is still an ongoing challenge.
 Various image search engines, e.g., Google search, Bing search, or open-source engines (WISE~\cite{wise}, Image Search Engine~\cite{ise}), are available.
-E.g., WISE~\cite{wise} and Image Search Engine (ISE)~\cite{ise} both use vision-language models such as OpenCLIP~\cite{ilharco_gabriel_2021_5143773,cherti2023reproducible}.
+Recent advancements in machine learning move search engines from traditional text-based approaches using provided meta-data for images to use deep learning models.
+For example WISE~\cite{wise} and Image Search Engine (ISE)~\cite{ise} both use vision-language models such as OpenCLIP~\cite{ilharco_gabriel_2021_5143773,cherti2023reproducible,Radford2021LearningTV,schuhmann2022laionb}.
+The images for the search engine are transformed to one reduced embedding space, based on pre-training~\cite{Radford2021LearningTV}.
+The pre-trained model, was trained with (image, text) pairs, so that even an arbitrary text can be transformed to this embedded space.
 However, especially for research, small and easy to setup search engines considering own datasets are hard to find.
 For this reason, a minimalistic search engine, called CLIPSE (CLIP-based image Search Engine), was developed.
 CLIPSE is published as open-source software\footnote{\url{clipse}} and builds on Python~3, and HTML5 with CSS and Javascript.
@@ -77,7 +80,7 @@ This enables to perform a simple text-based image search for a given data-set, e
 
 
 \section{Overview}
-Similar to WISE and ISE, CLIPSE extracts for all images of a given data-set embeddings from OpenCLIP~\cite{ilharco_gabriel_2021_5143773,cherti2023reproducible}.
+Similar to WISE and ISE, CLIPSE extracts for all images of a given data-set embeddings from OpenCLIP.
 CLIPSE is a Python~3 application, and the setup is kept simple, UV~\cite{uv}(a fast and simple Python package manager) will automatically configure the dependencies (e.g. \texttt{pandas}, \texttt{flask}, \texttt{rich}, \texttt{tqdm}, and \texttt{open\_clip}).
 CLIPSE further can process images using only CPU, therefore does not require a GPU.
 
@@ -107,7 +110,7 @@ An example for the web interface is shown in Figure~\ref{fig:web}.
 
 The web-interface is based on \texttt{flask} and one simple template which uses a minimal CSS framework (\texttt{MVP}) and two JavaScript functions (one to perform the server request to gather the search results, and another one for the pagination functionality).
 
-In both interfacing cases, the text query is transformed using OpenCLIP~\cite{ilharco_gabriel_2021_5143773,cherti2023reproducible} to the same embedding space.
+In both interfacing cases, the text query is transformed using OpenCLIP to the same embedding space.
 Afterwards, the similarity of the text considering all images is calculated, based on the dot product.
 The used dot product can be seen as an unnormalized cosine similarity measure.
 Based on the similarity scores, the results are sorted and delivered as output to the corresponding interface.
