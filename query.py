@@ -22,7 +22,7 @@ def transform_json_index(index_json):
     return np.array(images), np.array(embeddings).reshape((len(images), -1))
 
 
-def load_index(index_file):
+def load_index(index_file, cache=True):
     cached_index = index_file + ".npz"
     index_size = os.stat(index_file).st_size
     if os.path.isfile(cached_index):
@@ -36,12 +36,13 @@ def load_index(index_file):
     with open(index_file) as xfp:
         index = json.load(xfp)
     images, embeddings = transform_json_index(index)
-    np.savez(
-        index_file + ".npz",
-        images=images,
-        embeddings=embeddings,
-        index_size=index_size
-    )
+    if cache:
+        np.savez(
+            index_file + ".npz",
+            images=images,
+            embeddings=embeddings,
+            index_size=index_size
+        )
 
     return images, embeddings
 

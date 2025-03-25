@@ -18,12 +18,13 @@ def main(_):
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("image_folder", type=str, help="images to be processed")
     parser.add_argument("--index_folder", type=str, default="index", help="folder for storing the clipse index")
+    parser.add_argument("--no_cache", action="store_true", help="do not created cached numpy representations of the index")
 
     a = vars(parser.parse_args())
 
     os.makedirs(a["index_folder"], exist_ok=True)
 
-    print(f"""calculate embeddings for folder {a["image_folder"]} """)
+    print(f"""calculate embeddings for folder: {a["image_folder"]} """)
     clip = CLIP()
     images = list(glob.glob(os.path.join(a["image_folder"], "*")))
     print(f"""{len(images)} images to handle """)
@@ -34,7 +35,7 @@ def main(_):
         json.dump(res, xfp)
 
     print("check to read the index")
-    index = load_index(index_file)
+    index = load_index(index_file, cache=not a["no_cache"])
 
     print("done :cat:")
 

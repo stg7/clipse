@@ -72,6 +72,7 @@ For example WISE~\cite{wise} and Image Search Engine (ISE)~\cite{ise} both use v
 The images for the search engine are transformed to one reduced embedding space, based on pre-training~\cite{Radford2021LearningTV}.
 The pre-trained model, was trained with (image, text) pairs, so that even an arbitrary text can be transformed to this embedded space.
 However, especially for research, small and easy to setup search engines considering own datasets are hard to find.
+\textcolor{red}{Usually image search engines rely on estimated meta-data or manually annotations (tags) cite Information retrieval paper.}
 For this reason, a minimalistic search engine, called CLIPSE (CLIP-based image Search Engine), was developed.
 CLIPSE is published as open-source software\footnote{\url{clipse}} and builds on Python~3, and HTML5 with CSS and Javascript.
 The design follows a simplification approach, therefor everything is kept as simple as possible.
@@ -84,7 +85,7 @@ Similar to WISE and ISE, CLIPSE extracts for all images of a given data-set embe
 CLIPSE is a Python~3 application, and the setup is kept simple, UV~\cite{uv}(a fast and simple Python package manager) will automatically configure the dependencies (e.g. \texttt{pandas}, \texttt{flask}, \texttt{rich}, \texttt{tqdm}, and \texttt{open\_clip}).
 CLIPSE further can process images using only CPU, therefore does not require a GPU.
 
-As first step, the index must be created, here \lstinline[language={bash}]{build_index.py} can be called, with the folder of the images, it is recommended to resize them to e.g. $480\times480$ for faster processing.
+As first step, the index must be created, here \lstinline[language={bash}]{build_index.py} can be called, with the folder of the images, it is recommended to resize them to e.g. $480\times480$ (or similar according to the aspect ratio) for faster processing.
 The image is stored as \texttt{json} (for exploration) and compressed \texttt{Numpy.npz} (for faster loading).
 After the index is created and stored, it can be accessed with two possible ways.
 The first one is using the command-line \lstinline[language={bash}]{query.py} and produces colored output using the \texttt{rich} package.
@@ -118,7 +119,46 @@ Thus the performance of CLIPSE depends on the used embedding model, which can be
 Overall, to extend CLIPSE for very large datasets several instances could run for subsets and then a final aggregation can be performed of the results.
 
 \section{Benchmark}
+In the following section, small proof-of-concept benchmarks are performed, to evaluate the time to index a dataset and the time to perform queries.
+All benchmarks are performed on a Intel NUC with an Intel Core i7-1185G7 CPU, 64 GB main memory, a fast SSD, and no GPU acceleration.
+PyTorch does parallel processing, however the system performs indexing and querying in a sequential manner.
 
+Three test datasets are used:
+\begin{itemize}
+    \item \texttt{avt\_ai\_images}: 146 images based on text-to-image generation~\cite{goering2023ai,goering2023aiquality}
+    \item \texttt{sample200}: 200 randomly selected images from the Unsplash-lite dataset~\cite{unsplash}
+    \item \texttt{div2k}: all 900 images from the DIV2K dataset~\cite{agustsson2017ntire}
+    \item \texttt{sophoappeal}: 1061 images from the SoPhoAppeal dataset~\cite{goering2023imageappeal}
+    \item \texttt{unsplash-lite}: the full Unsplash-lite dataset consisting of $\approx 25k$ images
+\end{itemize}
+
+The images have been resized before, to a resolution of $480\times W$ with $W$ adjusted to the aspect ratio of the image.
+For all time measurements 32 repetitions have been performed.
+
+\subsection{Time to index}
+
+\begin{table}[htb!]
+\caption{Measured time to index the datasets.}
+\label{tbl:measured_time_to_index_the_datasets_}
+\begin{tabular}{llllr}
+\toprule
+dataset                  & \# images & average time [s]   & std time [s]       & avg time per image [s] \\
+\midrule
+\texttt{avt\_ai\_images} & 146       &                    &                    & \\
+\texttt{sample200}       & 200       &                    &                    & \\
+\texttt{div2k}           & 900       &                    &                    & \\
+\texttt{sophoappeal}     & 1061      &                    &                    & \\
+\texttt{unsplash-lite}   & 24976     &                    &                    & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The build index step consists of creating the embeddings, and then reading the index as a test and also to further convert the json file to a numpy file (for faster storing).
+In Table~\ref{tbl:measured_time_to_index_the_datasets_} ....
+
+\subsection{Time to process queries}
+
+query = "a cat exploring the dark night"
 
 \section{Conclusion}
 
