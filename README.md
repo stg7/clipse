@@ -43,11 +43,24 @@ Independent of the input folder, where are images are stored without sub-directo
 E.g., your lower resolution image for indexing is `my-path/whateverpath/img.jpg` then the full-resolution variant will be expected to be stored in `full/whateverpath/img.jpg`.
 So all tools assume images to be stored in subfolders of the root folder. 
 
-### command line interface
+### command line interface :cool:
 <img src="research/imgs/CLI.jpg" width="400" />
 
-### web interface
+### web interface :love_letter:
 <img src="research/imgs/WEB.jpg" width="600" />
+
+### example run :smiley:
+This repository also includes some example images in `photos/test_images`.
+To build the index perform 
+
+```bash
+uv run build_index.py photos/test_images
+```
+
+Then you can call the server with: (the `--index_file` is defaults to `index/test_images.json`)
+```bash
+uv run server.py --index_file index/test_images.json
+```
 
 
 ## acknowledgments :book:
