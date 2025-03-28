@@ -57,7 +57,7 @@ To build the index perform
 uv run build_index.py photos/test_images
 ```
 
-Then you can call the server with: (the `--index_file` is defaults to `index/test_images.json`)
+Then you can call the server with: (the `--index_file` defaults to `index/test_images.json`)
 ```bash
 uv run server.py --index_file index/test_images.json
 ```
