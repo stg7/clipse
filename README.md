@@ -42,9 +42,9 @@ All included tools should be run with `uv run`.
 Independent of the input folder, where are images are stored without sub-directories, to create the index, the webserver expects the full-resolution images in the same substructure in the `full` directory.
 E.g., your lower resolution image for indexing is `my-path/whateverpath/img.jpg` then the full-resolution variant will be expected to be stored in `full//whateverpath/img.jpg`.
 
-![Command line interface](research/imgs/CLI.jpg){width=50%}
+![Command line interface](research/imgs/CLI.jpg | width=200)
 
-![Web interface](research/imgs/WEB.jpg){width=50%}
+![Web interface](research/imgs/WEB.jpg | width=300)
 
 
 ## acknowledgments :book:
