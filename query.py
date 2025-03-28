@@ -68,7 +68,7 @@ def main(_):
                                      epilog="stg7 2025",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--query", type=str, default=None, help="search query")
-    parser.add_argument("--index_file", type=str, default="index/photos.json", help="index file to load")
+    parser.add_argument("--index_file", type=str, default="index/test_images.json", help="index file to load")
     parser.add_argument("--interactive","-i", action="store_true", help="interactive interface")
     parser.add_argument('--num_results', type=int, default=10, help='number of results to be shown')
 
@@ -83,7 +83,7 @@ def main(_):
         print("done")
 
     if a["interactive"]:
-        print("[bold blue]welcome[/bold blue] :smiley: to the interactive CLIPSE search (empty query to exit)")
+        print("[bold blue]welcome[/bold blue] :smiley: to the interactive clipse search (empty query to exit)")
         query = "."
         while query != "":
             print("[bold red]prompt>[/bold red] ", end="")
