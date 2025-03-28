@@ -120,7 +120,7 @@
                 resultsDiv.innerHTML = '';
                 images.forEach(img => {
                     const linkElem = document.createElement('a');
-                    linkElem.href = "full/" + img; // Set the image URL as the href
+                    linkElem.href = "full/" + img.substring(img.indexOf('/') + 1); // Set the image URL as the href
                     linkElem.target = "_blank"; // Open the link in a new tab
 
                     const imgElem = document.createElement('img');

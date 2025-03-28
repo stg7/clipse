@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 import time
 import math
+import argparse
+import sys
+import os
 
 import pandas as pd
 from flask import Flask, request, jsonify, render_template, send_from_directory
@@ -9,8 +12,6 @@ from query import query_index
 
 app = Flask(__name__, template_folder="templates")
 
-do_query = query_index("./index/photos.json")
-
 @app.route('/search', methods=['GET'])
 def search():
     images_per_page = 9
@@ -18,7 +19,7 @@ def search():
     query = request.args.get('query')  # Get the query parameter
     page = int(request.args.get('page', 0))
     start_time = time.time()
-    df = do_query(query)  # all results
+    df = app.do_query(query)  # all results
 
     df_sel = df.head(images_per_page * (page +1)).tail(images_per_page)
     images = df_sel["image"].values.tolist()
@@ -48,10 +49,25 @@ def imgs(path):
     return send_from_directory('photos', path)
 
 
-@app.route('/full/photos/<path:path>')
+@app.route('/full/<path:path>')
 def full_res_imgs(path):
-    return send_from_directory('full/photos', path)
+    return send_from_directory('full/', path)
 
 
-if __name__ == '__main__':
+def main(_):
+    # argument parsing
+    parser = argparse.ArgumentParser(description='clipse web server',
+                                     epilog="stg7 2025",
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("--index_file", type=str, default="./index/test_images.json", help="folder for storing the clipse index")
+    a = vars(parser.parse_args())
+
+    assert(os.path.isfile(a["index_file"]))
+
+    app.do_query = query_index(a["index_file"])
     app.run(debug=True)
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
+
