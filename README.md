@@ -1,15 +1,14 @@
-# CLIPSE (clip-based image search engine)
-small image search engine using clip embeddings
+# CLIPSE (clip-based image search engine) :mag: :sunrise:
+A small image search :mag: engine using clip embeddings.
+The overall idea is to provide a minimalistic search engine for images, which can be used locally for smaller datasets as they are for example used in research.
 
-## requirements
+## requirements :wrench: 
 
 * python3 (3.12)
-* uv 
+* uv (see [astral-uv](https://github.com/astral-sh/uv?tab=readme-ov-file#installation) for installation instructions)
 
-## usage
-Run uv to setup everyting
-
-e.g. `uv run build_index.py --help` should result in:
+## usage :computer:
+Run `uv` to setup everything, e.g., the command `uv run build_index.py --help` should result in:
 
 ```
 usage: build_index.py [-h] [--index_folder INDEX_FOLDER] image_folder
@@ -29,21 +28,23 @@ stg7 2025
 
 ```
 
-## tools
+`uv` ensures to setup all dependencies in a virtual environment.
+
+## tools :rocket:
 All included tools should be run with `uv run`.
 
-* `build_index.py`: create an index based on a folder with images (recommended to downscale the images, e.g. to 480x480)
+* `build_index.py`: create an index based on a folder with images (recommended to downscale the images, e.g. to 480x480, or 480 as width and the height adjusted to the aspect ratio)
 * `query.py`: command line interface to perform queries to an created index
 * `server.py`: web interface
 
 
-**Important**: For full-resolution acces in the web-interface.
-Independent of the input folder to create the index, the webserver expects the full-resolution images in the same substructure in the `full` directory.
+**Important**: For full-resolution access in the web-interface.
+Independent of the input folder, where are images are stored without sub-directories, to create the index, the webserver expects the full-resolution images in the same substructure in the `full` directory.
 E.g., your lower resolution image for indexing is `my-path/whateverpath/img.jpg` then the full-resolution variant will be expected to be stored in `full//whateverpath/img.jpg`.
 
 
 
-## acknowledgments
+## acknowledgments :book:
 If you use this software in your research, please include a link to the repository and reference one of the following paper.
 
 ```bibtex

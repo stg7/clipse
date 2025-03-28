@@ -86,7 +86,7 @@ CLIPSE is a Python~3 application, and the setup is kept simple, UV~\cite{uv}(a f
 CLIPSE further can process images using only CPU, therefore does not require a GPU.
 
 As first step, the index must be created, here \lstinline[language={bash}]{build_index.py} can be called, with the folder of the images, it is recommended to resize them to e.g. $480\times480$ (or similar according to the aspect ratio) for faster processing.
-The image is stored as \texttt{json} (for exploration) and compressed \texttt{Numpy.npz} (for faster loading).
+The image is stored as \texttt{json} (for exploration) and compressed \lstinline[language={python}]{numpy.npz} (for faster loading).
 After the index is created and stored, it can be accessed with two possible ways.
 The first one is using the command-line \lstinline[language={bash}]{query.py} and produces colored output using the \texttt{rich} package.
 A possible output is shown in Figure~\ref{fig:cli}.
@@ -127,9 +127,10 @@ Three test datasets are used:
 \begin{itemize}
     \item \texttt{avt\_ai\_images}: 146 images based on text-to-image generation~\cite{goering2023ai,goering2023aiquality}
     \item \texttt{sample200}: 200 randomly selected images from the Unsplash-lite dataset~\cite{unsplash}
-    \item \texttt{div2k}: all 900 images from the DIV2K dataset~\cite{agustsson2017ntire}
+    \item \texttt{div2k}: all 900 images from the DIV2K dataset~\cite{agustsson2017ntire} (train and validation)
     \item \texttt{sophoappeal}: 1061 images from the SoPhoAppeal dataset~\cite{goering2023imageappeal}
-    \item \texttt{unsplash-lite}: the full Unsplash-lite dataset consisting of $\approx 25k$ images
+    \item \texttt{avt\_image\_db}: 1133 images from~\cite{goering2019Intra}
+    \item \texttt{unsplash-lite}: the full Unsplash-lite dataset~\cite{unsplash} consisting of $\approx 25k$ images
 \end{itemize}
 
 The images have been resized before, to a resolution of $480\times W$ with $W$ adjusted to the aspect ratio of the image.
@@ -148,12 +149,13 @@ dataset                  & \# images & average time [s]   & std time [s]       &
 \texttt{sample200}       & 200       &                    &                    & \\
 \texttt{div2k}           & 900       &                    &                    & \\
 \texttt{sophoappeal}     & 1061      &                    &                    & \\
+\texttt{avt\_image\_db}  & 1133      &                    &                    & \\
 \texttt{unsplash-lite}   & 24976     &                    &                    & \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The build index step consists of creating the embeddings, and then reading the index as a test and also to further convert the json file to a numpy file (for faster storing).
+The build index step consists of creating the embeddings, and then reading the index as a test and also to further convert the json file to a numpy file (for faster storing), the last step was deactivated for the measurements.
 In Table~\ref{tbl:measured_time_to_index_the_datasets_} ....
 
 \subsection{Time to process queries}

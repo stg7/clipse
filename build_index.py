@@ -11,6 +11,7 @@ from rich import print
 from clip_utils import CLIP
 from query import load_index
 
+
 def main(_):
     # argument parsing
     parser = argparse.ArgumentParser(description='create clipse index',
