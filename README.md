@@ -4,7 +4,7 @@ The overall idea is to provide a minimalistic search engine for images, which ca
 
 ## requirements :wrench: 
 
-* python3 (3.12)
+* python 3 (tested with 3.12)
 * uv (see [astral-uv](https://github.com/astral-sh/uv?tab=readme-ov-file#installation) for installation instructions)
 
 ## usage :computer:
