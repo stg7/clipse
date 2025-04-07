@@ -17,6 +17,9 @@ def search():
     images_per_page = 9
 
     query = request.args.get('query')  # Get the query parameter
+    if query == "":
+        return jsonify({"error": "query is empty"})
+
     page = int(request.args.get('page', 0))
     start_time = time.time()
     df = app.do_query(query)  # all results

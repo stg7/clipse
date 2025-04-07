@@ -77,7 +77,7 @@ def main(_):
 
     if a["query"]:
         df = do_query(a["query"])
-        print(f"""top 10 matching images to {a["query"]}""")
+        print(f"""top 10 matching images to "{a["query"]}" """)
         print(df.head(a["num_results"]))
         print(df.head(a["num_results"]).to_json(index=False))
         print("done")
