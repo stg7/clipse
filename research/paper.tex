@@ -17,6 +17,8 @@
 \usepackage{natbib}
 \usepackage{doi}
 \usepackage{listings}
+\usepackage{siunitx}
+
 \graphicspath{{./imgs/}}
 
 \title{CLIPSE -- a minimalistic CLIP-based image search engine for research}
@@ -44,6 +46,7 @@
 %\renewcommand{\undertitle}{Technical Report}
 \renewcommand{\shorttitle}{\textit{arXiv} Template}
 
+\newcommand{\todo}[1]{\textcolor{red}{#1}}
 
 \hypersetup{
 pdftitle={CLIPSE -- a minimalistic CLIP-based image search engine for research},
@@ -56,7 +59,11 @@ pdfkeywords={image search},
 \maketitle
 
 \begin{abstract}
-
+A brief overview of CLIPSE, a self-hosted image search engine with the main application of research, is provided.
+In general, CLIPSE uses CLIP embeddings to process the images and also the text queries.
+The overall framework is designed with simplicity, to enable easy extension and usage.
+Two benchmark scenarios are considered covering indexing and querying time.
+It is shown that CLIPSE is capable of handling smaller datasets, for larger datasets a distributed approach with several instances should be considered.
 \end{abstract}
 
 
@@ -76,12 +83,12 @@ However, especially for research, small and easy to setup search engines conside
 For this reason, a minimalistic search engine, called CLIPSE (CLIP-based image Search Engine), was developed.
 CLIPSE is published as open-source software\footnote{\url{clipse}} and builds on Python~3, and HTML5 with CSS and Javascript.
 The design follows a simplification approach, therefor everything is kept as simple as possible.
-This enables to perform a simple text-based image search for a given data-set, e.g., using command line or with a web-interface.
+This enables to perform a simple text-based image search for a given dataset, e.g., using command line or with a web-interface.
 
 
 
 \section{Overview}
-Similar to WISE and ISE, CLIPSE extracts for all images of a given data-set embeddings from OpenCLIP.
+Similar to WISE and ISE, CLIPSE extracts for all images of a given dataset embeddings from OpenCLIP.
 CLIPSE is a Python~3 application, and the setup is kept simple, UV~\cite{uv}(a fast and simple Python package manager) will automatically configure the dependencies (e.g. \texttt{pandas}, \texttt{flask}, \texttt{rich}, \texttt{tqdm}, and \texttt{open\_clip}).
 CLIPSE further can process images using only CPU, therefore does not require a GPU.
 
@@ -123,7 +130,7 @@ In the following section, small proof-of-concept benchmarks are performed, to ev
 All benchmarks are performed on a Intel NUC with an Intel Core i7-1185G7 CPU, 64 GB main memory, a fast SSD, and no GPU acceleration.
 PyTorch does parallel processing, however the system performs indexing and querying in a sequential manner.
 
-Three test datasets are used:
+The following test datasets are used:
 \begin{itemize}
     \item \texttt{avt\_ai\_images}: 146 images based on text-to-image generation~\cite{goering2023ai,goering2023aiquality}
     \item \texttt{sample200}: 200 randomly selected images from the Unsplash-lite dataset~\cite{unsplash}
@@ -133,34 +140,87 @@ Three test datasets are used:
     \item \texttt{unsplash-lite}: the full Unsplash-lite dataset~\cite{unsplash} consisting of $\approx 25k$ images
 \end{itemize}
 
-The images have been resized before, to a resolution of $480\times W$ with $W$ adjusted to the aspect ratio of the image.
+All the images have been resized before, to a resolution of $480\times W$ with $W$ adjusted to the aspect ratio of the image.
 For all time measurements 32 repetitions have been performed.
 
-\subsection{Time to index}
+\subsection{Time to build the index}
 
 \begin{table}[htb!]
-\caption{Measured time to index the datasets.}
+\centering
+\caption{Measured time to index the datasets; values rounded to 3 decimals.}
 \label{tbl:measured_time_to_index_the_datasets_}
-\begin{tabular}{llllr}
+\begin{tabular}{llrrr}
 \toprule
-dataset                  & \# images & average time [s]   & std time [s]       & avg time per image [s] \\
+dataset                  & \# images & average time [s] & std time [s] & avg time per image [s] \\
 \midrule
-\texttt{avt\_ai\_images} & 146       &                    &                    & \\
-\texttt{sample200}       & 200       &                    &                    & \\
-\texttt{div2k}           & 900       &                    &                    & \\
-\texttt{sophoappeal}     & 1061      &                    &                    & \\
-\texttt{avt\_image\_db}  & 1133      &                    &                    & \\
-\texttt{unsplash-lite}   & 24976     &                    &                    & \\
+\texttt{avt\_ai\_images} & 146       & 12.210            & 0.210         & 0.084 \\
+\texttt{sample200}       & 200       & 14.554           & 0.087        & 0.073 \\
+\texttt{div2k}           & 900       & 55.069           & 0.649        & 0.061 \\
+\texttt{sophoappeal}     & 1061      & 61.458           & 0.111        & 0.058 \\
+\texttt{avt\_image\_db}  & 1133      & 65.060            & 0.287        & 0.057 \\
+\texttt{unsplash-lite}   & 24976     & 1411.237         & 10.144       & 0.057 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+
+
+
+
+
 
 The build index step consists of creating the embeddings, and then reading the index as a test and also to further convert the json file to a numpy file (for faster storing), the last step was deactivated for the measurements.
 In Table~\ref{tbl:measured_time_to_index_the_datasets_} ....
 
 \subsection{Time to process queries}
+To evaluate the time for query processing, one test query is used, \texttt{query = "a cat exploring the dark night"}, other examples would result in similar time for the processing.
+The query processing is done in three steps, first the index is loaded, then as second step an embedded representation of the query is created, and as last step, the similarities to all images are measured.
+Thus the overall size of the dataset has an influence on the response time for query processing.
+In the next measurement, compare Table~\ref{tbl:measured_time_to_query_the_datasets_cold} a cold start is handled, thus the time to load the index and to perform the query is accumulated.
+In the web interface, the index is usually loaded into main memory, thus only the second and third step are required, which is handled in Table~\ref{tbl:measured_time_to_query_the_datasets_warm}.
+Here, \texttt{wget} was used to perform queries to the loaded webserver.
 
-query = "a cat exploring the dark night"
+\begin{table}[htb!]
+\centering
+\caption{Measured time to query the datasets -- cold; values rounded to 3 decimals.}
+\label{tbl:measured_time_to_query_the_datasets_cold}
+\begin{tabular}{lrrrr}
+\toprule
+dataset                  & json index size [MB] & npz index size [MB] & average time [s] & std time [s]  \\
+\midrule
+\texttt{avt\_ai\_images} & 1.6                  & 0.6                 & 3.763            & 0.093 \\
+\texttt{sample200}       & 2.2                  & 0.8                 & 3.787            & 0.066 \\
+\texttt{div2k}           & 9.8                  & 3.6                 & 3.802            & 0.071 \\
+\texttt{sophoappeal}     & 11.5                 & 4.6                 & 3.823            & 0.088 \\
+\texttt{avt\_image\_db}  & 12.3                 & 4.6                 & 3.954            & 0.603 \\
+\texttt{unsplash-lite}   & 271.3                & 101.2               & 3.998            & 0.178 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htb!]
+\centering
+\caption{Measured time to query the datasets -- warm; values rounded to 3 decimals.}
+\label{tbl:measured_time_to_query_the_datasets_warm}
+\begin{tabular}{lrr}
+\toprule
+dataset                  & average time [s] & std time [s]  \\
+\midrule
+\texttt{avt\_ai\_images} & 0.039            & 0.011 \\
+\texttt{sample200}       & 0.039            & 0.009 \\
+\texttt{div2k}           & 0.039            & 0.012 \\
+\texttt{sophoappeal}     & 0.040            & 0.011 \\
+\texttt{avt\_image\_db}  & 0.039            & 0.011 \\
+\texttt{unsplash-lite}   & 0.057            & 0.012 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+Comparing Tables~\ref{tbl:measured_time_to_query_the_datasets_cold}, and~\ref{tbl:measured_time_to_query_the_datasets_warm}, it can be concluded that the majority of boot up time is spent for the loading of the index, even though this is nearly independent of the number of images in the index.
+Furthermore, the time to process one query in a warm start simulation, indicates a fast processing of max $57$\,ms for \texttt{unsplash-lite}.
+Also the processing of the query seems to be independent of the number of images in the index.
+
 
 \section{Conclusion}
 
