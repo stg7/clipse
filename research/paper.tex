@@ -165,7 +165,14 @@ dataset                  & \# images & average time [s] & std time [s] & avg tim
 
 
 The build index step consists of creating the embeddings, and then reading the index as a test and also to further convert the JSON file to a numpy file (for faster storing). The last step was deactivated for the measurements.
-In Table~\ref{tbl:measured_time_to_index_the_datasets_} \todo{....}
+In Table~\ref{tbl:measured_time_to_index_the_datasets_} the time needed for the introduced differently sized datasets is listed.
+Here, on average the time to index one images is nearly constant, e.g., $\leq 0.084\,s$.
+For smaller datasets the overall overhead of starting the script and loading the dependencies has a larger impact, thus the time to index one image is slightly higher than for larger datasets.
+Furthermore, it can be seen that the time to index is nearly linear growing based on the number of images.
+It should be mentioned that no GPU acceleration and batch processing are used, both would enable a faster indexing time.
+However, the overall time of $\approx23\,min$ for a dataset with $\approx 25k$ images is still acceptable.
+A possible extension of the indexing process would be to include a dynamic increase of an already existing index, where new photo embeddings would be appended to the index.
+For simplicity reasons this was dropped during the development.
 
 \subsection{Time to process queries}
 To evaluate the time for query processing, one test query is used, \texttt{query = "a cat exploring the dark night"}, other examples would result in similar time for the processing.
