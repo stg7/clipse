@@ -61,9 +61,9 @@ pdfkeywords={image search},
 \begin{abstract}
 A brief overview of CLIPSE, a self-hosted image search engine with the main application of research, is provided.
 In general, CLIPSE uses CLIP embeddings to process the images and also the text queries.
-The overall framework is designed with simplicity, to enable easy extension and usage.
-Two benchmark scenarios are considered covering indexing and querying time.
-It is shown that CLIPSE is capable of handling smaller datasets, for larger datasets a distributed approach with several instances should be considered.
+The overall framework is designed with simplicity to enable easy extension and usage.
+Two benchmark scenarios are described and evaluated, covering indexing and querying time.
+It is shown that CLIPSE is capable of handling smaller datasets; for larger datasets, a distributed approach with several instances should be considered.
 \end{abstract}
 
 
@@ -77,12 +77,12 @@ Various image search engines, e.g., Google search, Bing search, or open-source e
 Recent advancements in machine learning move search engines from traditional text-based approaches using provided meta-data for images to use deep learning models.
 For example WISE~\cite{wise} and Image Search Engine (ISE)~\cite{ise} both use vision-language models such as OpenCLIP~\cite{ilharco_gabriel_2021_5143773,cherti2023reproducible,Radford2021LearningTV,schuhmann2022laionb}.
 The images for the search engine are transformed to one reduced embedding space, based on pre-training~\cite{Radford2021LearningTV}.
-The pre-trained model, was trained with (image, text) pairs, so that even an arbitrary text can be transformed to this embedded space.
-However, especially for research, small and easy to setup search engines considering own datasets are hard to find.
-\textcolor{red}{Usually image search engines rely on estimated meta-data or manually annotations (tags) cite Information retrieval paper.}
+The pre-trained model was trained with (image, text) pairs so that even an arbitrary text can be transformed to this embedded space.
+However, especially for research, small and easy to set up search engines considering own datasets are hard to find.
+Usually image search engines rely on estimated meta-data, manually annotations (tags), or content analysis (computer vision/classification)~\cite{datta2008image}.
 For this reason, a minimalistic search engine, called CLIPSE (CLIP-based image Search Engine), was developed.
 CLIPSE is published as open-source software\footnote{\url{https://github.com/stg7/clipse}} and builds on Python~3, and HTML5 with CSS and Javascript.
-The design follows a simplification approach, therefor everything is kept as simple as possible.
+The design follows a simplification approach; therefore, everything is kept as simple as possible.
 This enables to perform a simple text-based image search for a given dataset, e.g., using command line or with a web-interface.
 
 
@@ -92,9 +92,9 @@ Similar to WISE and ISE, CLIPSE extracts for all images of a given dataset embed
 CLIPSE is a Python~3 application, and the setup is kept simple, UV~\cite{uv}(a fast and simple Python package manager) will automatically configure the dependencies (e.g. \texttt{pandas}, \texttt{flask}, \texttt{rich}, \texttt{tqdm}, and \texttt{open\_clip}).
 CLIPSE further can process images using only CPU, therefore does not require a GPU.
 
-As first step, the index must be created, here \lstinline[language={bash}]{build_index.py} can be called, with the folder of the images, it is recommended to resize them to e.g. $480\times480$ (or similar according to the aspect ratio) for faster processing.
+As a first step, the index must be created, here \lstinline[language={bash}]{build_index.py} can be called, with the folder of the images, it is recommended to resize them to e.g. $480\times480$ (or similar according to the aspect ratio) for faster processing.
 The image is stored as \texttt{json} (for exploration) and compressed \lstinline[language={python}]{numpy.npz} (for faster loading).
-After the index is created and stored, it can be accessed with two possible ways.
+After the index is created and stored, it can be accessed in two possible ways.
 The first one is using the command-line \lstinline[language={bash}]{query.py} and produces colored output using the \texttt{rich} package.
 A possible output is shown in Figure~\ref{fig:cli}.
 \lstinline[language={bash}]{query.py} has several modes, e.g., for batch processing (no colors) or interactive sessions.
@@ -116,19 +116,19 @@ An example for the web interface is shown in Figure~\ref{fig:web}.
 \label{fig:web}
 \end{figure}
 
-The web-interface is based on \texttt{flask} and one simple template which uses a minimal CSS framework (\texttt{MVP}) and two JavaScript functions (one to perform the server request to gather the search results, and another one for the pagination functionality).
+The web interface is based on \texttt{flask} and one simple template that uses a minimal CSS framework (\texttt{MVP}) and two JavaScript functions (one to perform the server request to gather the search results, and another one for the pagination functionality).
 
 In both interfacing cases, the text query is transformed using OpenCLIP to the same embedding space.
-Afterwards, the similarity of the text considering all images is calculated, based on the dot product.
+Afterward, the similarity of the text considering all images is calculated, based on the dot product.
 The used dot product can be seen as an unnormalized cosine similarity measure.
 Based on the similarity scores, the results are sorted and delivered as output to the corresponding interface.
-Thus the performance of CLIPSE depends on the used embedding model, which can be changed in the python code.
-Overall, to extend CLIPSE for very large datasets several instances could run for subsets and then a final aggregation can be performed of the results.
+Thus, the performance of CLIPSE depends on the used embedding model, which can be changed in the Python code.
+Overall, to extend CLIPSE for very large datasets, several instances could run for subsets, and then a final aggregation can be performed of the results.
 
 \section{Benchmark}
 In the following section, small proof-of-concept benchmarks are performed, to evaluate the time to index a dataset and the time to perform queries.
-All benchmarks are performed on a Intel NUC with an Intel Core i7-1185G7 CPU, 64 GB main memory, a fast SSD, and no GPU acceleration.
-PyTorch does parallel processing, however the system performs indexing and querying in a sequential manner.
+All benchmarks are performed on an Intel NUC with an Intel Core i7-1185G7 CPU, 64 GB of main memory, a fast SSD, and no GPU acceleration.
+PyTorch does parallel processing; however, the system performs indexing and querying sequentially.
 
 The following test datasets are used:
 \begin{itemize}
@@ -164,16 +164,16 @@ dataset                  & \# images & average time [s] & std time [s] & avg tim
 \end{table}
 
 
-The build index step consists of creating the embeddings, and then reading the index as a test and also to further convert the json file to a numpy file (for faster storing), the last step was deactivated for the measurements.
-In Table~\ref{tbl:measured_time_to_index_the_datasets_} ....
+The build index step consists of creating the embeddings, and then reading the index as a test and also to further convert the JSON file to a numpy file (for faster storing). The last step was deactivated for the measurements.
+In Table~\ref{tbl:measured_time_to_index_the_datasets_} \todo{....}
 
 \subsection{Time to process queries}
 To evaluate the time for query processing, one test query is used, \texttt{query = "a cat exploring the dark night"}, other examples would result in similar time for the processing.
-The query processing is done in three steps, first the index is loaded, then as second step an embedded representation of the query is created, and as last step, the similarities to all images are measured.
-Thus the overall size of the dataset has an influence on the response time for query processing.
+The query processing is done in three steps, first the index is loaded, then, as a second step, an embedded representation of the query is created, and as a last step, the similarities to all images are measured.
+Thus, the overall size of the dataset has an influence on the response time for query processing.
 In the next measurement, compare Table~\ref{tbl:measured_time_to_query_the_datasets_cold} a cold start is handled, thus the time to load the index and to perform the query is accumulated.
 In the web interface, the index is usually loaded into main memory, thus only the second and third step are required, which is handled in Table~\ref{tbl:measured_time_to_query_the_datasets_warm}.
-Here, \texttt{wget} was used to perform queries to the loaded webserver.
+Here, \texttt{wget} was used to perform queries to the loaded web server.
 
 \begin{table}[htb!]
 \centering
@@ -214,11 +214,18 @@ dataset                  & average time [s] & std time [s]  \\
 
 Comparing Tables~\ref{tbl:measured_time_to_query_the_datasets_cold}, and~\ref{tbl:measured_time_to_query_the_datasets_warm}, it can be concluded that the majority of boot up time is spent for the loading of the index, even though this is nearly independent of the number of images in the index.
 Furthermore, the time to process one query in a warm start simulation, indicates a fast processing of max $57$\,ms for \texttt{unsplash-lite}.
-Also the processing of the query seems to be independent of the number of images in the index.
+Also, the processing of the query seems to be independent of the number of images in the index.
 
 
 \section{Conclusion}
-
+In this paper a brief overview of CLIPSE, an Open-CLIP-based image search engine, was provided.
+Various possible open-source search engines are existing; however, the majority of them are hard to set up and may be better suitable for larger datasets.
+CLIPSE aims to be minimalistic considering the requirements for setup and is focused on small datasets for, e.g., specific research use cases.
+To implement this simplified approach, Python, UV and modern HTML are used for the system.
+Furthermore, a brief evaluation considering the time needed to index and query is provided.
+Several selected datasets are used and compared for both scenarios, considering the time and size of the datasets.
+It is shown that for smaller datasets, there is no direct dependency on the number of images included in the index.
+In the future, CLIPSE could also be applied in a distributed approach to handle even larger datasets.
 
 \bibliographystyle{alpha}
 \bibliography{refs}
