@@ -45,10 +45,10 @@ So all tools assume images to be stored in subfolders of the root folder.
 Full and resized images need to have the same file extension.
 
 ### command line interface :cool:
-<img src="research/imgs/CLI.jpg" width="400" />
+<img src="research/imgs/CLI.png" width="400" />
 
 ### web interface :love_letter:
-<img src="research/imgs/WEB.jpg" width="600" />
+<img src="research/imgs/WEB.png" width="600" />
 
 ### example run :smiley:
 This repository also includes some example images in `photos/test_images`.
