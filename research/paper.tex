@@ -14,7 +14,7 @@
 \usepackage{microtype}      % microtypography
 \usepackage{cleveref}       % smart cross-referencing
 \usepackage{graphicx}
-\usepackage{natbib}
+\usepackage[numbers]{natbib}
 \usepackage{doi}
 \usepackage{listings}
 \usepackage{siunitx}
@@ -101,7 +101,7 @@ A possible output is shown in Figure~\ref{fig:cli}.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{CLI.jpg}
+\includegraphics[width=0.5\textwidth]{CLI.png}
 \caption{CLIPSE command line interface, example query and result.}
 \label{fig:cli}
 \end{figure}
@@ -111,7 +111,7 @@ An example for the web interface is shown in Figure~\ref{fig:web}.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.85\textwidth]{WEB.jpg}
+\includegraphics[width=0.85\textwidth]{WEB.png}
 \caption{CLIPSE web interface, example query and result.}
 \label{fig:web}
 \end{figure}
@@ -234,7 +234,7 @@ Several selected datasets are used and compared for both scenarios, considering 
 It is shown that for smaller datasets, there is no direct dependency on the number of images included in the index.
 In the future, CLIPSE could also be applied in a distributed approach to handle even larger datasets.
 
-\bibliographystyle{alpha}
+\bibliographystyle{apalike}
 \bibliography{refs}
 
 
