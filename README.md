@@ -65,13 +65,17 @@ uv run server.py --index_file index/test_images.json
 
 
 ## acknowledgments :book:
-If you use this software in your research, please include a link to the repository and reference one of the following paper.
+If you use this software in your research, please include a link to the repository and reference the following [paper](https://arxiv.org/abs/2504.17643).
 
 ```bibtex
-@article{goering2025clipse,
-  title={CLIPSE -- a minimalistic CLIP-based image search engine for research},
-  author={Steve G{\"o}ring},
-  journal={arXiv e-prints},
+@misc{göring2025clipseminimalisticclipbased,
+      title={CLIPSE -- a minimalistic CLIP-based image search engine for research}, 
+      author={Steve Göring},
+      year={2025},
+      eprint={2504.17643},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2504.17643}, 
 }
 ```
 
