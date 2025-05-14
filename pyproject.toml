@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "flask>=3.1.0",
+    "matplotlib>=3.10.3",
+    "numpy>=2.2.1",
     "open-clip-torch>=2.30.0",
     "pandas>=2.2.3",
     "rich>=13.9.4",

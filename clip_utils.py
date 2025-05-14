@@ -1,7 +1,16 @@
+#!/usr/bin/env python3
+import argparse
+import sys
+import os
+import json
 
 import torch
 from PIL import Image
 import open_clip
+from tqdm import tqdm
+from rich import print
+import numpy as np
+from matplotlib import pyplot as plt
 
 
 class CLIP:
@@ -34,3 +43,33 @@ class CLIP:
             "features": image_features.tolist(),
             "image": image_path
         }
+
+
+
+def main(_):
+    # argument parsing
+    parser = argparse.ArgumentParser(description='extract clip embeddings from an image',
+                                     epilog="stg7 2025",
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("image", nargs="+", type=str, help="image to process")
+    parser.add_argument("--embeddings_folder", type=str, default="embeddings", help="folder for storing the embeddings")
+
+    a = vars(parser.parse_args())
+
+    os.makedirs(a["embeddings_folder"], exist_ok=True)
+
+    clip = CLIP()
+    for image in tqdm(a["image"]):
+        basename = os.path.splitext(os.path.basename(image))[0]
+        res = clip.get_image_features(image)
+        em = np.array(res["features"]).reshape((32, 16))
+        plt.imshow(em)
+        plt.savefig(f"""{a["embeddings_folder"]}/{basename}.pdf""", bbox_inches="tight")
+        with open(f"""{a["embeddings_folder"]}/{basename}.json""", "w") as xfp:
+            json.dump(res, xfp)
+
+    print("done :cat:")
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
